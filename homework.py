@@ -88,7 +88,8 @@ class SportsWalking(Training):
         calorie_1 = COEFF_CALORIES_1 * self.weight
         calorie_2 = self.get_mean_speed()**COEFF_CALORIES_2 // self.height
         calorie_3 = COEFF_CALORIES_3 * self.weight
-        return ((calorie_1 + calorie_2 * calorie_3) * (self.duration * min_in_hour)) # более подробное название привысит рекомендованное значение 79  знаков в строке
+        return ((calorie_1 + calorie_2 * calorie_3) * (self.duration * min_in_hour)) 
+        # более подробное название привысит рекомендованное значение 79  знаков в строке
 
 
 class Swimming(Training):
