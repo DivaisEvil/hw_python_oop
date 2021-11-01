@@ -25,7 +25,6 @@ class Training:
 
     LEN_STEP = 0.65
     M_IN_KM = 1000
-    Training_name = ''
 
     def __init__(self,
                  action: int,
@@ -61,10 +60,11 @@ class Running(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        ccal1 = 18
-        ccal2 = 20
+        COEFF_CALORIES_1 = 18
+        COEFF_CALORIES_2 = 20
         min_in_hour = 60
-        speed_weight = (ccal1 * self.get_mean_speed() - ccal2) * self.weight
+        speed_weight = ((COEFF_CALORIES_1 * self.get_mean_speed()
+                         - COEFF_CALORIES_2) * self.weight)
         return (speed_weight / self.M_IN_KM * (self.duration * min_in_hour))
 
 
@@ -81,14 +81,14 @@ class SportsWalking(Training):
         super().__init__(action, duration, weight)
 
     def get_spent_calories(self) -> float:
-        coeff_calorie_1 = 0.035
-        coeff_calorie_2 = 2
-        coeff_calorie_3 = 0.029
+        COEFF_CALORIES_1 = 0.035
+        COEFF_CALORIES_2 = 2
+        COEFF_CALORIES_3 = 0.029
         min_in_hour = 60
-        coef_1 = coeff_calorie_1 * self.weight
-        coef_2 = self.get_mean_speed()**coeff_calorie_2 // self.height
-        coef_3 = coeff_calorie_3 * self.weight
-        return ((coef_1 + coef_2 * coef_3) * (self.duration * min_in_hour))
+        calorie_1 = COEFF_CALORIES_1 * self.weight
+        calorie_2 = self.get_mean_speed()**COEFF_CALORIES_2 // self.height
+        calorie_3 = COEFF_CALORIES_3 * self.weight
+        return ((calorie_1 + calorie_2 * calorie_3) * (self.duration * min_in_hour)) # более подробное название привысит рекомендованное значение 79  знаков в строке
 
 
 class Swimming(Training):
@@ -111,16 +111,19 @@ class Swimming(Training):
         return pool / self.M_IN_KM / self.duration
 
     def get_spent_calories(self) -> float:
-        coeff_calorie_1 = 1.1
-        coeff_calorie_2 = 2
-        coef_1 = self.get_mean_speed() + coeff_calorie_1
-        return (coef_1 * coeff_calorie_2 * self.weight)
+        COEFF_CALORIES_1 = 1.1
+        COEFF_CALORIES_2 = 2
+        calorie_1 = self.get_mean_speed() + COEFF_CALORIES_1
+        return (calorie_1 * COEFF_CALORIES_2 * self.weight)
 
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    type_to_class = {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking}
-    return type_to_class[workout_type](*data)
+    TYPE_TO_CLASS = {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking}
+    if workout_type in TYPE_TO_CLASS:
+        return TYPE_TO_CLASS[workout_type](*data)
+    else:
+        raise Exception('Вид тренировки не найден')
 
 
 def main(training: Training) -> None:
